@@ -1,0 +1,45 @@
+<!-- INCLUDE overall_header.html -->
+
+<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+<!-- IF S_FIND_USER -->
+	<h1>{L_ACP_EDIT_RANKS}</h1>
+	<form id="select_user" method="post" action="{U_ACTION}">
+		<fieldset>
+			<legend>{L_ACP_SELECT_USER}</legend>
+			<dl>
+				<dt><label for="username">{L_ENTER_USERNAME}{L_COLON}</label></dt>
+				<dd><input class="text medium" type="text" id="username" name="username" /></dd>
+				<dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
+			</dl>
+
+			<p class="quick">
+				<input type="submit" name="submit-user" value="{L_SUBMIT}" class="button1" />
+			</p>
+		</fieldset>
+	</form>
+<!-- ENDIF -->
+
+<!-- IF S_EDIT_RANKS --> 
+	<h1>{ACP_MR_USER}</h1>
+	<form id="update_ranks" name="update_ranks" method="post" action="{U_ACTION}">
+		<fieldset>
+			<legend>{L_ACP_CHANGE_RANKS}</legend>
+			<dl>
+				<dt><label for="user_rank_one">{L_ACP_RANK_ONE}{L_COLON}</label></dt>
+				<dd><select name="user_rank_one" id="user_rank_one">{S_RANK_ONE_OPTIONS}</select></dd>
+				<dt><label for="user_rank_two">{L_ACP_RANK_TWO}{L_COLON}</label></dt>
+				<dd><select name="user_rank_two" id="user_rank_two">{S_RANK_TWO_OPTIONS}</select></dd>
+				<dt><label for="user_rank_three">{L_ACP_RANK_THREE}{L_COLON}</label></dt>
+				<dd><select name="user_rank_three" id="user_rank_three">{S_RANK_THREE_OPTIONS}</select></dd>
+			</dl>
+			{S_FORM_TOKEN}
+			<input type="hidden" name="hidden_user_id" id="hidden_user_id" value="{HIDDEN_RANK_USER_ID}" />
+			<p class="quick">
+				<input type="submit" name="submit-rank" value="{L_SUBMIT}" class="button1" />
+			</p>			
+		</fieldset>
+	</form>
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

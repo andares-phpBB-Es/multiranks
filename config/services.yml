@@ -1,0 +1,23 @@
+services:
+    posey.multiranks.admin.controller:
+        class: posey\multiranks\controller\admin_controller
+        arguments:
+            - @dbal.conn
+            - @controller.helper
+            - @request
+            - @template
+            - @user
+            - @path_helper
+            - %core.root_path%
+            - %core.php_ext%
+
+    posey.multiranks.listener:
+        class: posey\multiranks\event\listener
+        arguments:
+            - @controller.helper
+            - @template
+            - @dbal.conn
+            - @config
+            - %core.root_path%
+        tags:
+            - { name: event.listener }
