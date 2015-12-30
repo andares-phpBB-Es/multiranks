@@ -21,17 +21,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
-	static public function getSubscribedEvents()
-	{
-		return array(
-			'core.user_setup'						=> 'load_language_on_setup',
-			'core.memberlist_view_profile'			=> 'mr_on_profile',
-			'core.viewtopic_modify_post_row'		=> 'mr_on_topic',
-			'core.ucp_pm_view_messsage'				=> 'mr_on_pm',
-		);
-	}
-	/* @var \phpbb\controller\helper */
-	protected $helper;
 	/* @var \phpbb\template\template */
 	protected $template;
 	/* @var \phpbb\db\driver\driver_interface */
@@ -40,138 +29,126 @@ class listener implements EventSubscriberInterface
 	protected $config;
 	/** @var String phpBB Root path */
 	protected $phpbb_root_path;
-	
+
 	/**
 	* Constructor
 	*
-	* @param \phpbb\controller\helper			$helper		Controller helper object
 	* @param \phpbb\template					$template	Template object
 	* @param \phpbb\db\driver\driver_interface	$db			Database
 	* @param \phpbb\config\config				$config		Config
 	* @param String								$phpbb_root_path	phpBB Root path
 	*/
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, $phpbb_root_path)
+	public function __construct(\phpbb\template\template $template, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, $phpbb_root_path)
 	{
-		$this->helper = $helper;
 		$this->template = $template;
 		$this->db = $db;
 		$this->config = $config;
 		$this->phpbb_root_path = $phpbb_root_path;
 	}
-	public function load_language_on_setup($event)
+
+	static public function getSubscribedEvents()
 	{
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
-			'ext_name' => 'posey/multiranks',
-			'lang_set' => 'common',
+		return array(
+			'core.memberlist_view_profile'			=> 'mr_on_profile',
+			'core.viewtopic_modify_post_row'		=> 'mr_on_topic',
+			'core.ucp_pm_view_messsage'				=> 'mr_on_pm',
 		);
-		$event['lang_set_ext'] = $lang_set_ext;
 	}
-	
+
 	public function mr_on_profile($event)
 	{
-		$member = $event['member']; 
-		$user_rank_two = (int) $member['user_rank_two'];
-		$user_rank_thr = (int) $member['user_rank_three'];
-		
-		$sql_two = 'SELECT *
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_two;
-		$sql_thr = 'SELECT * 
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_thr;
-		$rank_two_res	= $this->db->sql_query($sql_two);
-		$rank_two		= $this->db->sql_fetchrow($rank_two_res);
-		$rank_thr_res	= $this->db->sql_query($sql_thr);
-		$rank_thr		= $this->db->sql_fetchrow($rank_thr_res);
-		$this->db->sql_freeresult($rank_two_res);
-		$this->db->sql_freeresult($rank_thr_res);
+		$rank2 = (int) $event['member']['user_rank_two'];
+		$rank3 = (int) $event['member']['user_rank_three'];
 
-		$rank_two_src = (!empty($rank_two['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_two['rank_image'] : '';
-		$rank_thr_src = (!empty($rank_thr['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_two['rank_image'] : '';
-		$rank_two_img = (!empty($rank_two['rank_image'])) ? '<img src="' . $rank_two_src . '" alt="' . $rank_two['rank_title'] . '" title="' . $rank_two['rank_title'] . '" />' : '';
-		$rank_thr_img = (!empty($rank_thr['rank_image'])) ? '<img src="' . $rank_thr_src . '" alt="' . $rank_thr['rank_title'] . '" title="' . $rank_thr['rank_title'] . '" />' : '';
-		
+		// Grab the additional rank data
+		$sql = 'SELECT *
+				FROM ' . RANKS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3));
+		$result = $this->db->sql_query($sql);
+
+		// Set up user rank array
+		$rank = array();
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rank[$row['rank_id']]['title'] = $row['rank_title'];
+			$rank[$row['rank_id']]['src'] = (!empty($row['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $row['rank_image'] : '';
+			$rank[$row['rank_id']]['img'] = (!empty($row['rank_image'])) ? '<img src="' . $rank[$row['rank_id']]['src'] . '" alt="' . $row['rank_title'] . '" title="' . $row['rank_title'] . '" />' : '';
+		}
+
+		$this->db->sql_freeresult($result);
+
 		$this->template->assign_vars(array(
-			'RANK_TWO_TITLE'	=> $rank_two['rank_title'],
-			'RANK_TWO_IMG'		=> $rank_two_img,
-			'RANK_TWO_IMG_SRC'	=> $rank_two_src,
-			'RANK_THR_TITLE'	=> $rank_thr['rank_title'],
-			'RANK_THR_IMG'		=> $rank_thr_img,
-			'RANK_THR_IMG_SRC'	=> $rank_thr_src,
+			'RANK_TWO_TITLE'	=> $rank2 ? $rank[$rank2]['title'] : '',
+			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
+			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
+			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
 		));
 	}
-	
+
 	public function mr_on_topic($event)
 	{
-		$user_rank = 'SELECT user_rank_two, user_rank_three FROM ' . USERS_TABLE . ' WHERE user_id = ' . $event['poster_id'];
-		$user_rank_res = $this->db->sql_query($user_rank);
-		while ($rank_row = $this->db->sql_fetchrow($user_rank_res))
+		$sql = 'SELECT r.*, u.user_rank_two, u.user_rank_three
+				FROM ' . RANKS_TABLE . ' r
+				LEFT JOIN ' . USERS_TABLE . ' u
+					ON r.rank_id = u.user_rank_two
+						OR r.rank_id = u.user_rank_three
+				WHERE u.user_id = ' . (int) $event['poster_id'];
+		$result = $this->db->sql_query($sql);
+
+		// Set up user rank array
+		$rank = array();
+		$rank2 = $rank3 = '';
+
+		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$user_rank_two = $rank_row['user_rank_two'];
-			$user_rank_thr = $rank_row['user_rank_three'];
+			// Define rank order
+			$rank2 = (int) $row['user_rank_two'];
+			$rank3 = (int) $row['user_rank_three'];
+
+			$rank[$row['rank_id']]['title'] = $row['rank_title'];
+			$rank[$row['rank_id']]['src'] = (!empty($row['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $row['rank_image'] : '';
+			$rank[$row['rank_id']]['img'] = (!empty($row['rank_image'])) ? '<img src="' . $rank[$row['rank_id']]['src'] . '" alt="' . $row['rank_title'] . '" title="' . $row['rank_title'] . '" />' : '';
 		}
-		
-		$sql_two = 'SELECT *
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_two;
-		$sql_thr = 'SELECT * 
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_thr;
-		$rank_two_res	= $this->db->sql_query($sql_two);
-		$rank_two		= $this->db->sql_fetchrow($rank_two_res);
-		$rank_thr_res	= $this->db->sql_query($sql_thr);
-		$rank_thr		= $this->db->sql_fetchrow($rank_thr_res);
-		$this->db->sql_freeresult($rank_two_res);
-		$this->db->sql_freeresult($rank_thr_res);
-		$this->db->sql_freeresult($user_rank_res);
-		
-		$rank_two_src = (!empty($rank_two['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_two['rank_image'] : '';
-		$rank_thr_src = (!empty($rank_thr['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_thr['rank_image'] : '';
-		$rank_two_img = (!empty($rank_two['rank_image'])) ? '<img src="' . $rank_two_src . '" alt="' . $rank_two['rank_title'] . '" title="' . $rank_two['rank_title'] . '" />' : '';
-		$rank_thr_img = (!empty($rank_thr['rank_image'])) ? '<img src="' . $rank_thr_src . '" alt="' . $rank_thr['rank_title'] . '" title="' . $rank_thr['rank_title'] . '" />' : '';
-		
+
+		$this->db->sql_freeresult($result);
+
 		$event['post_row'] = array_merge($event['post_row'], array(
-			'RANK_TWO_TITLE'	=> $rank_two['rank_title'],
-			'RANK_TWO_IMG'		=> $rank_two_img,
-			'RANK_TWO_IMG_SRC'	=> $rank_two_src,
-			'RANK_THR_TITLE'	=> $rank_thr['rank_title'],
-			'RANK_THR_IMG'		=> $rank_thr_img,
-			'RANK_THR_IMG_SRC'	=> $rank_thr_src,
+			'RANK_TWO_TITLE'	=> $rank2 ? $rank[$rank2]['title'] : '',
+			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
+			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
+			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
 		));
 	}
-		
+
 	public function mr_on_pm($event)
 	{
-		$user_info = $event['user_info'];
-		$user_rank_two = (int) $user_info['user_rank_two'];
-		$user_rank_thr = (int) $user_info['user_rank_three'];
-		
-		$sql_two = 'SELECT *
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_two;
-		$sql_thr = 'SELECT * 
-					FROM ' . RANKS_TABLE . '
-					WHERE rank_id = ' . $user_rank_thr;
-		$rank_two_res	= $this->db->sql_query($sql_two);
-		$rank_two		= $this->db->sql_fetchrow($rank_two_res);
-		$rank_thr_res	= $this->db->sql_query($sql_thr);
-		$rank_thr		= $this->db->sql_fetchrow($rank_thr_res);
-		$this->db->sql_freeresult($rank_two_res);
-		$this->db->sql_freeresult($rank_thr_res);
-		
-		$rank_two_src = (!empty($rank_two['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_two['rank_image'] : '';
-		$rank_thr_src = (!empty($rank_thr['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $rank_two['rank_image'] : '';
-		$rank_two_img = (!empty($rank_two['rank_image'])) ? '<img src="' . $rank_two_src . '" alt="' . $rank_two['rank_title'] . '" title="' . $rank_two['rank_title'] . '" />' : '';
-		$rank_thr_img = (!empty($rank_thr['rank_image'])) ? '<img src="' . $rank_thr_src . '" alt="' . $rank_thr['rank_title'] . '" title="' . $rank_thr['rank_title'] . '" />' : '';
-		
+		$rank2 = (int) $event['user_info']['user_rank_two'];
+		$rank3 = (int) $event['user_info']['user_rank_three'];
+
+		// Grab the additional rank data
+		$sql = 'SELECT *
+				FROM ' . RANKS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3));
+		$result = $this->db->sql_query($sql);
+
+		// Set up user rank array
+		$rank = array();
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rank[$row['rank_id']]['title'] = $row['rank_title'];
+			$rank[$row['rank_id']]['src'] = (!empty($row['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $row['rank_image'] : '';
+			$rank[$row['rank_id']]['img'] = (!empty($row['rank_image'])) ? '<img src="' . $rank[$row['rank_id']]['src'] . '" alt="' . $row['rank_title'] . '" title="' . $row['rank_title'] . '" />' : '';
+		}
+
+		$this->db->sql_freeresult($result);
+
 		$this->template->assign_vars(array(
-			'RANK_TWO_TITLE'	=> $rank_two['rank_title'],
-			'RANK_TWO_IMG'		=> $rank_two_img,
-			'RANK_TWO_IMG_SRC'	=> $rank_two_src,
-			'RANK_THR_TITLE'	=> $rank_thr['rank_title'],
-			'RANK_THR_IMG'		=> $rank_thr_img,
-			'RANK_THR_IMG_SRC'	=> $rank_thr_src,
+			'RANK_TWO_TITLE'	=> $rank2 ? $rank[$rank2]['title'] : '',
+			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
+			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
+			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
 		));
 	}
 }

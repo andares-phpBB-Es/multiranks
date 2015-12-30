@@ -24,12 +24,12 @@ class release_1_0_0 extends \phpbb\db\migration\migration
 			)),
 		);
 	}
-	
+
 	public function update_schema()
 	{
 		return array(
-			'add_columns'        => array(
-				$this->table_prefix . 'users'        => array(
+			'add_columns'		=> array(
+				$this->table_prefix . 'users'		=> array(
 					'user_rank_two'		=> array('UINT', 0, 'after' => 'user_rank'),
 					'user_rank_three'	=> array('UINT', 0, 'after' => 'user_rank'),
 				),
@@ -39,8 +39,8 @@ class release_1_0_0 extends \phpbb\db\migration\migration
 	public function revert_schema()
 	{
 		return array(
-			'drop_columns'        => array(
-				$this->table_prefix . 'users'        => array(
+			'drop_columns'		=> array(
+				$this->table_prefix . 'users'		=> array(
 					'user_rank_two',
 					'user_rank_three',
 				),

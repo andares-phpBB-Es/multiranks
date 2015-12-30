@@ -33,11 +33,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 		'ACP_MR'				=> 'Multi Ranks',
 		'ACP_MR_SAVED'			=> 'User\'s Multi Ranks have been saved',
-		'ACP_EDIT_RANKS'		=> 'Manage user\'s ranks', 
+		'ACP_EDIT_RANKS'		=> 'Manage user\'s ranks',
 		'ACP_EDIT_USER_RANK'	=> 'Manage %s\'s ranks', // %s will be username
 		'ACP_SELECT_USER'		=> 'Select a user',
 		'ACP_CHANGE_RANKS'		=> 'Change Ranks',
-		
+
 		'ACP_NO_SPEC_RANK'	=> 'No special rank assigned',
 		'ACP_RANK_ONE'		=> 'Special Rank one',
 		'ACP_RANK_TWO'		=> 'Special Rank two',
