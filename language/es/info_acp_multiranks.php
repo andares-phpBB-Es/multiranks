@@ -39,4 +39,11 @@ $lang = array_merge($lang, array(
 		'ACP_RANK_ONE'		=> '1er Rango Especial',
 		'ACP_RANK_TWO'		=> '2do Rango Especial',
 		'ACP_RANK_THREE'	=> '3er Rango Especial',
+		'ACP_RANK_FOUR'		=> '4to Rango Especial',
+		'ACP_RANK_FIVE'		=> '5to Rango Especial',
+		'ACP_RANK_SIX'		=> '6to Rango Especial',
+		'ACP_RANK_SEVEN'	=> '7mo Rango Especial',
+		'ACP_RANK_EIGHT'	=> '8vo Rango Especial',
+		'ACP_RANK_NINE'		=> '9no Rango Especial',
+		'ACP_RANK_TEN'		=> '10mo Rango Especial',
 ));
