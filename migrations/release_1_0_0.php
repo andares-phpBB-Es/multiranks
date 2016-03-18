@@ -32,6 +32,13 @@ class release_1_0_0 extends \phpbb\db\migration\migration
 				$this->table_prefix . 'users'		=> array(
 					'user_rank_two'		=> array('UINT', 0, 'after' => 'user_rank'),
 					'user_rank_three'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_four'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_five'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_six'		=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_seven'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_eight'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_nine'	=> array('UINT', 0, 'after' => 'user_rank'),
+					'user_rank_ten'		=> array('UINT', 0, 'after' => 'user_rank'),
 				),
 			),
 		);
@@ -43,6 +50,13 @@ class release_1_0_0 extends \phpbb\db\migration\migration
 				$this->table_prefix . 'users'		=> array(
 					'user_rank_two',
 					'user_rank_three',
+					'user_rank_four',
+					'user_rank_five',
+					'user_rank_six',
+					'user_rank_seven',
+					'user_rank_eight',
+					'user_rank_nine',
+					'user_rank_ten',
 				),
 			),
 		);
