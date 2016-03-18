@@ -59,11 +59,18 @@ class listener implements EventSubscriberInterface
 	{
 		$rank2 = (int) $event['member']['user_rank_two'];
 		$rank3 = (int) $event['member']['user_rank_three'];
+		$rank4 = (int) $event['member']['user_rank_four'];
+		$rank5 = (int) $event['member']['user_rank_five'];
+		$rank6 = (int) $event['member']['user_rank_six'];
+		$rank7 = (int) $event['member']['user_rank_seven'];
+		$rank8 = (int) $event['member']['user_rank_eight'];
+		$rank9 = (int) $event['member']['user_rank_nine'];
+		$rank10 = (int) $event['member']['user_rank_ten'];
 
 		// Grab the additional rank data
 		$sql = 'SELECT *
 				FROM ' . RANKS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3));
+				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3, $rank3, $rank4, $rank5, $rank6, $rank7, $rank8, $rank9, $rank10));
 		$result = $this->db->sql_query($sql);
 
 		// Set up user rank array
@@ -83,28 +90,56 @@ class listener implements EventSubscriberInterface
 			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
 			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
 			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
+			'RANK_FOU_TITLE'	=> $rank4 ? $rank[$rank4]['title'] : '',
+			'RANK_FOU_IMG'		=> $rank4 ? $rank[$rank4]['img'] : '',
+			'RANK_FIV_TITLE'	=> $rank5 ? $rank[$rank5]['title'] : '',
+			'RANK_FIV_IMG'		=> $rank5 ? $rank[$rank5]['img'] : '',
+			'RANK_SIX_TITLE'	=> $rank6 ? $rank[$rank6]['title'] : '',
+			'RANK_SIX_IMG'		=> $rank6 ? $rank[$rank6]['img'] : '',
+			'RANK_SVN_TITLE'	=> $rank7 ? $rank[$rank7]['title'] : '',
+			'RANK_SVN_IMG'		=> $rank7 ? $rank[$rank7]['img'] : '',
+			'RANK_EGT_TITLE'	=> $rank8 ? $rank[$rank8]['title'] : '',
+			'RANK_EGT_IMG'		=> $rank8 ? $rank[$rank8]['img'] : '',
+			'RANK_NIN_TITLE'	=> $rank9 ? $rank[$rank9]['title'] : '',
+			'RANK_NIN_IMG'		=> $rank9 ? $rank[$rank9]['img'] : '',
+			'RANK_TEN_TITLE'	=> $rank10 ? $rank[$rank10]['title'] : '',
+			'RANK_TEN_IMG'		=> $rank10 ? $rank[$rank10]['img'] : '',
 		));
 	}
 
 	public function mr_on_topic($event)
 	{
-		$sql = 'SELECT r.*, u.user_rank_two, u.user_rank_three
+		$sql = 'SELECT r.*, u.user_rank_two, u.user_rank_three, u.user_rank_four, u.user_rank_five, u.user_rank_six, u.user_rank_seven, u.user_rank_eight, u.user_rank_nine, u.user_rank_ten
 				FROM ' . RANKS_TABLE . ' r
 				LEFT JOIN ' . USERS_TABLE . ' u
 					ON r.rank_id = u.user_rank_two
 						OR r.rank_id = u.user_rank_three
+						OR r.rank_id = u.user_rank_four
+						OR r.rank_id = u.user_rank_five
+						OR r.rank_id = u.user_rank_six
+						OR r.rank_id = u.user_rank_seven
+						OR r.rank_id = u.user_rank_eight
+						OR r.rank_id = u.user_rank_nine
+						OR r.rank_id = u.user_rank_ten
 				WHERE u.user_id = ' . (int) $event['poster_id'];
 		$result = $this->db->sql_query($sql);
 
 		// Set up user rank array
 		$rank = array();
-		$rank2 = $rank3 = '';
+		$rank2 = $rank3 = $rank4 = $rank5 = $rank6 = $rank7 = $rank8 = $rank9 = $rank10 = '';
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			// Define rank order
 			$rank2 = (int) $row['user_rank_two'];
 			$rank3 = (int) $row['user_rank_three'];
+			$rank4 = (int) $row['user_rank_four'];
+			$rank5 = (int) $row['user_rank_five'];
+			$rank6 = (int) $row['user_rank_six'];
+			$rank7 = (int) $row['user_rank_seven'];
+			$rank8 = (int) $row['user_rank_eight'];
+			$rank9 = (int) $row['user_rank_nine'];
+			$rank10 = (int) $row['user_rank_ten'];
 
 			$rank[$row['rank_id']]['title'] = $row['rank_title'];
 			$rank[$row['rank_id']]['src'] = (!empty($row['rank_image'])) ? $this->phpbb_root_path . $this->config['ranks_path'] . '/' . $row['rank_image'] : '';
@@ -118,6 +153,20 @@ class listener implements EventSubscriberInterface
 			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
 			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
 			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
+			'RANK_FOU_TITLE'	=> $rank4 ? $rank[$rank4]['title'] : '',
+			'RANK_FOU_IMG'		=> $rank4 ? $rank[$rank4]['img'] : '',
+			'RANK_FIV_TITLE'	=> $rank5 ? $rank[$rank5]['title'] : '',
+			'RANK_FIV_IMG'		=> $rank5 ? $rank[$rank5]['img'] : '',
+			'RANK_SIX_TITLE'	=> $rank6 ? $rank[$rank6]['title'] : '',
+			'RANK_SIX_IMG'		=> $rank6 ? $rank[$rank6]['img'] : '',
+			'RANK_SVN_TITLE'	=> $rank7 ? $rank[$rank7]['title'] : '',
+			'RANK_SVN_IMG'		=> $rank7 ? $rank[$rank7]['img'] : '',
+			'RANK_EGT_TITLE'	=> $rank8 ? $rank[$rank8]['title'] : '',
+			'RANK_EGT_IMG'		=> $rank8 ? $rank[$rank8]['img'] : '',
+			'RANK_NIN_TITLE'	=> $rank9 ? $rank[$rank9]['title'] : '',
+			'RANK_NIN_IMG'		=> $rank9 ? $rank[$rank9]['img'] : '',
+			'RANK_TEN_TITLE'	=> $rank10 ? $rank[$rank10]['title'] : '',
+			'RANK_TEN_IMG'		=> $rank10 ? $rank[$rank10]['img'] : '',
 		));
 	}
 
@@ -125,11 +174,18 @@ class listener implements EventSubscriberInterface
 	{
 		$rank2 = (int) $event['user_info']['user_rank_two'];
 		$rank3 = (int) $event['user_info']['user_rank_three'];
+		$rank4 = (int) $event['user_info']['user_rank_four'];
+		$rank5 = (int) $event['user_info']['user_rank_five'];
+		$rank6 = (int) $event['user_info']['user_rank_six'];
+		$rank7 = (int) $event['user_info']['user_rank_seven'];
+		$rank8 = (int) $event['user_info']['user_rank_eight'];
+		$rank9 = (int) $event['user_info']['user_rank_nine'];
+		$rank10 = (int) $event['user_info']['user_rank_ten'];
 
 		// Grab the additional rank data
 		$sql = 'SELECT *
 				FROM ' . RANKS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3));
+				WHERE ' . $this->db->sql_in_set('rank_id', array($rank2, $rank3, $rank4, $rank5, $rank6, $rank7, $rank8, $rank9, $rank10));
 		$result = $this->db->sql_query($sql);
 
 		// Set up user rank array
@@ -149,6 +205,20 @@ class listener implements EventSubscriberInterface
 			'RANK_TWO_IMG'		=> $rank2 ? $rank[$rank2]['img'] : '',
 			'RANK_THR_TITLE'	=> $rank3 ? $rank[$rank3]['title'] : '',
 			'RANK_THR_IMG'		=> $rank3 ? $rank[$rank3]['img'] : '',
+			'RANK_FOU_TITLE'	=> $rank4 ? $rank[$rank4]['title'] : '',
+			'RANK_FOU_IMG'		=> $rank4 ? $rank[$rank4]['img'] : '',
+			'RANK_FIV_TITLE'	=> $rank5 ? $rank[$rank5]['title'] : '',
+			'RANK_FIV_IMG'		=> $rank5 ? $rank[$rank5]['img'] : '',
+			'RANK_SIX_TITLE'	=> $rank6 ? $rank[$rank6]['title'] : '',
+			'RANK_SIX_IMG'		=> $rank6 ? $rank[$rank6]['img'] : '',
+			'RANK_SVN_TITLE'	=> $rank7 ? $rank[$rank7]['title'] : '',
+			'RANK_SVN_IMG'		=> $rank7 ? $rank[$rank7]['img'] : '',
+			'RANK_EGT_TITLE'	=> $rank8 ? $rank[$rank8]['title'] : '',
+			'RANK_EGT_IMG'		=> $rank8 ? $rank[$rank8]['img'] : '',
+			'RANK_NIN_TITLE'	=> $rank9 ? $rank[$rank9]['title'] : '',
+			'RANK_NIN_IMG'		=> $rank9 ? $rank[$rank9]['img'] : '',
+			'RANK_TEN_TITLE'	=> $rank10 ? $rank[$rank10]['title'] : '',
+			'RANK_TEN_IMG'		=> $rank10 ? $rank[$rank10]['img'] : '',
 		));
 	}
 }
