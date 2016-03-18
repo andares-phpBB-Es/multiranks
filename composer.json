@@ -1,7 +1,7 @@
 {
 	"name": "posey/multiranks",
 	"type": "phpbb-extension",
-	"description": "Multi Ranks",
+	"description": "Multi Ranks.Special Edition with 10 ranks",
 	"homepage": "http://www.godfathertalks.com",
 	"version": "1.0.0",
 	"time": "2015-11-10",
@@ -10,7 +10,13 @@
 			"name": "posey",
 			"email": "admin@godfathertalks.com",
 			"homepage": "http://www.godfathertalks.com",
-			"role": "Lead Developer"
+			"role": "Author Lead Developer"
+		},
+		{
+			"name": "andares",
+			"email": "andares.cat@gmail.com",
+			"homepage": "www.phpbb-es.com",
+			"role": "Modifier Special Edition 10 ranks"
 		}],
 	"require": {
 		"php": ">=5.3.3"
