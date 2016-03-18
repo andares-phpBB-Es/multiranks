@@ -42,4 +42,11 @@ $lang = array_merge($lang, array(
 		'ACP_RANK_ONE'		=> 'Special Rank one',
 		'ACP_RANK_TWO'		=> 'Special Rank two',
 		'ACP_RANK_THREE'	=> 'Special Rank three',
+		'ACP_RANK_FOUR'		=> 'Special Rank four',
+		'ACP_RANK_FIVE'		=> 'Special Rank five',
+		'ACP_RANK_SIX'		=> 'Special Rank six',
+		'ACP_RANK_SEVEN'	=> 'Special Rank seven',
+		'ACP_RANK_EIGHT'	=> 'Special Rank eight',
+		'ACP_RANK_NINE'		=> 'Special Rank nine',
+		'ACP_RANK_TEN'		=> 'Special Rank ten',
 ));
