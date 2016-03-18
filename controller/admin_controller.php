@@ -93,6 +93,13 @@ class admin_controller
 			$s_rank_one_options = '<option value="0"' . ((!$user['user_rank']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
 			$s_rank_two_options = '<option value="0"' . ((!$user['user_rank_two']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
 			$s_rank_three_options = '<option value="0"' . ((!$user['user_rank_three']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_four_options = '<option value="0"' . ((!$user['user_rank_four']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_five_options = '<option value="0"' . ((!$user['user_rank_five']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_six_options = '<option value="0"' . ((!$user['user_rank_six']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_seven_options = '<option value="0"' . ((!$user['user_rank_seven']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_eight_options = '<option value="0"' . ((!$user['user_rank_eight']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_nine_options = '<option value="0"' . ((!$user['user_rank_nine']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
+			$s_rank_ten_options = '<option value="0"' . ((!$user['user_rank_ten']) ? ' selected="selected"' : '') . '>' . $this->user->lang['ACP_NO_SPEC_RANK'] . '</option>';
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -104,6 +111,27 @@ class admin_controller
 
 				$selected3 = ($user['user_rank_three'] && $row['rank_id'] == $user['user_rank_three']) ? ' selected="selected"' : '';
 				$s_rank_three_options .= '<option value="' . $row['rank_id'] . '"' . $selected3 . '>' . $row['rank_title'] . '</option>';
+
+				$selected4 = ($user['user_rank_four'] && $row['rank_id'] == $user['user_rank_four']) ? ' selected="selected"' : '';
+				$s_rank_four_options .= '<option value="' . $row['rank_id'] . '"' . $selected4 . '>' . $row['rank_title'] . '</option>';
+
+				$selected5 = ($user['user_rank_five'] && $row['rank_id'] == $user['user_rank_five']) ? ' selected="selected"' : '';
+				$s_rank_five_options .= '<option value="' . $row['rank_id'] . '"' . $selected5 . '>' . $row['rank_title'] . '</option>';
+
+				$selected6 = ($user['user_rank_six'] && $row['rank_id'] == $user['user_rank_six']) ? ' selected="selected"' : '';
+				$s_rank_six_options .= '<option value="' . $row['rank_id'] . '"' . $selected6 . '>' . $row['rank_title'] . '</option>';
+
+				$selected7 = ($user['user_rank_seven'] && $row['rank_id'] == $user['user_rank_seven']) ? ' selected="selected"' : '';
+				$s_rank_seven_options .= '<option value="' . $row['rank_id'] . '"' . $selected7 . '>' . $row['rank_title'] . '</option>';
+
+				$selected8 = ($user['user_rank_eight'] && $row['rank_id'] == $user['user_rank_eight']) ? ' selected="selected"' : '';
+				$s_rank_eight_options .= '<option value="' . $row['rank_id'] . '"' . $selected8 . '>' . $row['rank_title'] . '</option>';
+
+				$selected9 = ($user['user_rank_nine'] && $row['rank_id'] == $user['user_rank_nine']) ? ' selected="selected"' : '';
+				$s_rank_nine_options .= '<option value="' . $row['rank_id'] . '"' . $selected9 . '>' . $row['rank_title'] . '</option>';
+
+				$selected10 = ($user['user_rank_ten'] && $row['rank_id'] == $user['user_rank_ten']) ? ' selected="selected"' : '';
+				$s_rank_ten_options .= '<option value="' . $row['rank_id'] . '"' . $selected10 . '>' . $row['rank_title'] . '</option>';
 			}
 			$this->db->sql_freeresult($result);
 
@@ -115,6 +143,13 @@ class admin_controller
 				'S_RANK_ONE_OPTIONS'	=> $s_rank_one_options,
 				'S_RANK_TWO_OPTIONS'	=> $s_rank_two_options,
 				'S_RANK_THREE_OPTIONS'	=> $s_rank_three_options,
+				'S_RANK_FOUR_OPTIONS'	=> $s_rank_four_options,
+				'S_RANK_FIVE_OPTIONS'	=> $s_rank_five_options,
+				'S_RANK_SIX_OPTIONS'	=> $s_rank_six_options,
+				'S_RANK_SEVEN_OPTIONS'	=> $s_rank_seven_options,
+				'S_RANK_EIGHT_OPTIONS'	=> $s_rank_eight_options,
+				'S_RANK_NINE_OPTIONS'	=> $s_rank_nine_options,
+				'S_RANK_TEN_OPTIONS'	=> $s_rank_ten_options,
 
 				'HIDDEN_RANK_USER_ID'	=> (int) $user['user_id'],
 			));
@@ -128,12 +163,26 @@ class admin_controller
 				$rank_one = (int) $this->request->variable('user_rank_one', 0);
 				$rank_two = (int) $this->request->variable('user_rank_two', 0);
 				$rank_thr = (int) $this->request->variable('user_rank_three', 0);
+				$rank_fou = (int) $this->request->variable('user_rank_four', 0);
+				$rank_fiv = (int) $this->request->variable('user_rank_five', 0);
+				$rank_six = (int) $this->request->variable('user_rank_six', 0);
+				$rank_svn = (int) $this->request->variable('user_rank_seven', 0);
+				$rank_egt = (int) $this->request->variable('user_rank_eight', 0);
+				$rank_nin = (int) $this->request->variable('user_rank_nine', 0);
+				$rank_ten = (int) $this->request->variable('user_rank_ten', 0);
 				$upd_user_id = (int) $this->request->variable('hidden_user_id', 0);
 
 				$upd_sql = 'UPDATE ' . USERS_TABLE . '
 							SET user_rank = ' . $rank_one . ',
 								user_rank_two = ' . $rank_two . ',
-								user_rank_three = ' . $rank_thr . '
+								user_rank_three = ' . $rank_thr . ',
+								user_rank_four = ' . $rank_fou . ',
+								user_rank_five = ' . $rank_fiv . ',
+								user_rank_six = ' . $rank_six . ',
+								user_rank_seven = ' . $rank_svn . ',
+								user_rank_eight = ' . $rank_egt . ',
+								user_rank_nine = ' . $rank_nin . ',
+								user_rank_ten = ' . $rank_ten . '
 							WHERE user_id = ' . $upd_user_id;
 				$this->db->sql_query($upd_sql);
 
