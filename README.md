@@ -1,4 +1,4 @@
-# phpBB 3.1 Extension - Multi Ranks
+# phpBB 3.1 Extension - Multi Ranks - Special Edition 10 ranks.
 
 ## Description
 Allows you to give a user upto three special ranks!
