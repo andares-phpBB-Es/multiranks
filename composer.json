@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Multi Ranks.Special Edition with 10 ranks",
 	"homepage": "http://www.godfathertalks.com",
-	"version": "1.0.0",
-	"time": "2015-11-10",
+	"version": "1.0.1",
+	"time": "2016-03-16",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "posey",
